@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard</title>
+<title>Daily Planner</title>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="style.css">
 
 </head>
@@ -21,44 +23,97 @@ href="style.css">
 
 <header>
 
-<h1>
-📅 Daily Planner
-</h1>
+<div class="top-header">
 
-<button onclick="logout()">
-Logout
+<div class="month-nav">
+
+<button
+class="nav-btn"
+onclick="prevMonth()">
+
+←
+
 </button>
 
+<h1 id="judulBulan">
+
+📅 Daily Planner
+
+</h1>
+
+<button
+class="nav-btn"
+onclick="nextMonth()">
+
+→
+
+</button>
+
+</div>
+
+<button
+class="logout"
+onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
 </header>
+
+
+<!-- KALENDER -->
 
 <div id="calendar">
 
 </div>
 
+
+<!-- INPUT -->
+
 <div class="card">
 
 <h2 id="tanggal">
+
+Pilih Tanggal
 
 </h2>
 
 <div class="input">
 
 <input
-id="task"
-placeholder="Tambah kegiatan">
 
-<button onclick="tambah()">
-+
+id="task"
+
+type="text"
+
+placeholder=
+"Tambah kegiatan..."
+
+>
+
+<button
+onclick="tambah()">
+
+Tambah
+
 </button>
 
 </div>
 
 </div>
 
+
+<!-- AGENDA -->
+
 <div class="card">
 
 <h2>
+
 Agenda Hari Ini
+
 </h2>
 
 <div id="todo">
@@ -67,10 +122,15 @@ Agenda Hari Ini
 
 </div>
 
+
+<!-- PROGRESS -->
+
 <div class="card">
 
 <h2>
-Progress
+
+Progress Harian
+
 </h2>
 
 <div class="progress">
@@ -83,14 +143,21 @@ Progress
 
 <p id="persen">
 
+0% selesai
+
 </p>
 
 </div>
 
+
+<!-- RIWAYAT -->
+
 <div class="card">
 
 <h2>
+
 Aktivitas Selesai
+
 </h2>
 
 <div id="done">
@@ -101,7 +168,9 @@ Aktivitas Selesai
 
 </div>
 
-<script src="script.js">
+
+<script
+src="script.js">
 
 </script>
 

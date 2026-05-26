@@ -3,12 +3,14 @@
 function login(){
 
 let u =
-document.getElementById(
+document
+.getElementById(
 "username"
 )?.value;
 
 let p =
-document.getElementById(
+document
+.getElementById(
 "password"
 )?.value;
 
@@ -24,12 +26,13 @@ localStorage.setItem(
 u
 );
 
-window.location.href =
+window.location.href=
 "dashboard.html";
 
 }
 
 }
+
 
 /* CEK LOGIN */
 
@@ -47,14 +50,30 @@ if(
 )
 ){
 
-window.location.href =
+window.location.href=
 "index.html";
 
 }
 
 }
 
-let day = 1;
+
+/* TANGGAL */
+
+const now =
+new Date();
+
+let year =
+now.getFullYear();
+
+let month =
+now.getMonth();
+
+let day =
+now.getDate();
+
+
+/* DATA */
 
 let data =
 
@@ -86,6 +105,35 @@ data
 }
 
 
+/* KEY */
+
+function getKey(){
+
+return `${year}-${month}-${day}`;
+
+}
+
+
+/* BULAN */
+
+const namaBulan=[
+
+"Januari",
+"Februari",
+"Maret",
+"April",
+"Mei",
+"Juni",
+"Juli",
+"Agustus",
+"September",
+"Oktober",
+"November",
+"Desember"
+
+];
+
+
 /* KALENDER */
 
 function kalender(){
@@ -98,11 +146,29 @@ document.getElementById(
 if(!cal)
 return;
 
+document
+.getElementById(
+"judulBulan"
+)
+.innerHTML=
+
+`📅
+${namaBulan[month]}
+${year}`;
+
 cal.innerHTML="";
+
+const jumlahHari =
+
+new Date(
+year,
+month+1,
+0
+).getDate();
 
 for(
 let i=1;
-i<=31;
+i<=jumlahHari;
 i++
 ){
 
@@ -111,9 +177,14 @@ cal.innerHTML+=
 `
 
 <div
-class="
-day
-${i===day?"active":""}
+
+class=
+
+"day
+${i===day?
+"active":
+""}
+
 "
 
 onclick=
@@ -132,7 +203,55 @@ ${i}
 }
 
 
-/* PILIH TANGGAL */
+/* PINDAH BULAN */
+
+function nextMonth(){
+
+month++;
+
+if(
+month>11
+){
+
+month=0;
+
+year++;
+
+}
+
+day=1;
+
+kalender();
+
+render();
+
+}
+
+
+function prevMonth(){
+
+month--;
+
+if(
+month<0
+){
+
+month=11;
+
+year--;
+
+}
+
+day=1;
+
+kalender();
+
+render();
+
+}
+
+
+/* PILIH */
 
 function pilih(i){
 
@@ -149,23 +268,27 @@ render();
 
 function tambah(){
 
-const input =
+const input=
+
 document.getElementById(
 "task"
 );
 
 if(
-!input ||
 !input.value.trim()
 )
 return;
 
-if(
-!data[day]
-)
-data[day]=[];
+const key=
+getKey();
 
-data[day].push({
+if(
+!data[key]
+)
+
+data[key]=[];
+
+data[key].push({
 
 text:
 input.value,
@@ -188,8 +311,13 @@ render();
 
 function cek(i){
 
-data[day][i].done =
-!data[day][i].done;
+const key=
+getKey();
+
+data[key][i]
+.done=
+!data[key][i]
+.done;
 
 save();
 
@@ -198,11 +326,15 @@ render();
 }
 
 
-/* BATALKAN */
+/* BATAL */
 
 function batal(i){
 
-data[day][i].done=
+const key=
+getKey();
+
+data[key][i]
+.done=
 false;
 
 save();
@@ -222,7 +354,10 @@ confirm(
 )
 ){
 
-data[day]
+const key=
+getKey();
+
+data[key]
 .splice(
 i,
 1
@@ -241,29 +376,9 @@ render();
 
 function render(){
 
-const todo =
+const todo=
 document.getElementById(
 "todo"
-);
-
-const selesai =
-document.getElementById(
-"done"
-);
-
-const tgl =
-document.getElementById(
-"tanggal"
-);
-
-const bar =
-document.getElementById(
-"fill"
-);
-
-const persen =
-document.getElementById(
-"persen"
 );
 
 if(
@@ -271,19 +386,44 @@ if(
 )
 return;
 
-tgl.innerHTML =
-"Tanggal " +
-day;
+const selesai=
+document.getElementById(
+"done"
+);
+
+const tgl=
+document.getElementById(
+"tanggal"
+);
+
+const bar=
+document.getElementById(
+"fill"
+);
+
+const persen=
+document.getElementById(
+"persen"
+);
+
+tgl.innerHTML=
+
+`${day}
+${namaBulan[month]}
+${year}`;
 
 todo.innerHTML="";
 
 selesai.innerHTML="";
 
-let list =
-data[day]
+const key=
+getKey();
+
+const list=
+data[key]
 ||[];
 
-let totalDone=0;
+let done=0;
 
 list.forEach(
 
@@ -291,7 +431,7 @@ list.forEach(
 
 if(v.done){
 
-totalDone++;
+done++;
 
 selesai.innerHTML+=
 
@@ -385,20 +525,22 @@ onclick=
 
 );
 
-let hasil =
+let hasil=
+
 list.length
+
 ?
-(totalDone/
-list.length)
+
+done/
+list.length
 *100
+
 :
+
 0;
 
-if(bar)
 bar.style.width=
 hasil+"%";
-
-if(persen)
 
 persen.innerHTML=
 
@@ -425,6 +567,42 @@ window.location.href=
 "index.html";
 
 }
+
+
+/* AUTO UPDATE */
+
+setInterval(()=>{
+
+const now=
+new Date();
+
+if(
+
+now.getMonth()
+!==month ||
+
+now.getDate()
+!==day
+
+){
+
+month=
+now.getMonth();
+
+year=
+now.getFullYear();
+
+day=
+now.getDate();
+
+kalender();
+
+render();
+
+}
+
+},
+60000);
 
 
 kalender();
