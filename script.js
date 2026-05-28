@@ -26,7 +26,7 @@ localStorage.setItem(
 u
 );
 
-window.location.href=
+window.location.href =
 "dashboard.html";
 
 }
@@ -50,7 +50,7 @@ if(
 )
 ){
 
-window.location.href=
+window.location.href =
 "index.html";
 
 }
@@ -101,6 +101,27 @@ data
 )
 
 );
+
+}
+
+
+/* FORMAT MENIT */
+
+function formatMinutes(min){
+
+let jam =
+Math.floor(min/60);
+
+let menit =
+min%60;
+
+if(jam>0){
+
+return `${jam} jam ${menit} menit`;
+
+}
+
+return `${menit} menit`;
 
 }
 
@@ -179,7 +200,6 @@ cal.innerHTML+=
 <div
 
 class=
-
 "day
 ${i===day?
 "active":
@@ -251,7 +271,7 @@ render();
 }
 
 
-/* PILIH */
+/* PILIH TANGGAL */
 
 function pilih(i){
 
@@ -268,14 +288,20 @@ render();
 
 function tambah(){
 
-const input=
-
+const task=
 document.getElementById(
 "task"
 );
 
+const duration=
+document.getElementById(
+"duration"
+);
+
 if(
-!input.value.trim()
+!task.value.trim()
+||
+!duration.value
 )
 return;
 
@@ -291,14 +317,19 @@ data[key]=[];
 data[key].push({
 
 text:
-input.value,
+task.value,
 
-done:
-false
+duration:
+parseInt(
+duration.value
+),
+
+done:false
 
 });
 
-input.value="";
+task.value="";
+duration.value="";
 
 save();
 
@@ -372,6 +403,72 @@ render();
 }
 
 
+/* STATISTIK */
+
+function updateStats(){
+
+let today=0;
+let week=0;
+let monthTotal=0;
+
+const key=
+getKey();
+
+if(data[key]){
+
+data[key].forEach(item=>{
+
+today +=
+item.duration || 0;
+
+});
+
+}
+
+for(let k in data){
+
+data[k].forEach(item=>{
+
+monthTotal +=
+item.duration || 0;
+
+week +=
+item.duration || 0;
+
+});
+
+}
+
+const todayEl=
+document.getElementById(
+"todayTime"
+);
+
+const weekEl=
+document.getElementById(
+"weekTime"
+);
+
+const monthEl=
+document.getElementById(
+"monthTime"
+);
+
+if(todayEl)
+todayEl.innerHTML=
+formatMinutes(today);
+
+if(weekEl)
+weekEl.innerHTML=
+formatMinutes(week);
+
+if(monthEl)
+monthEl.innerHTML=
+formatMinutes(monthTotal);
+
+}
+
+
 /* RENDER */
 
 function render(){
@@ -413,7 +510,6 @@ ${namaBulan[month]}
 ${year}`;
 
 todo.innerHTML="";
-
 selesai.innerHTML="";
 
 const key=
@@ -441,8 +537,16 @@ selesai.innerHTML+=
 
 <div>
 
-✔
-${v.text}
+✔ ${v.text}
+
+<br>
+
+<small>
+
+⏱
+${formatMinutes(v.duration)}
+
+</small>
 
 </div>
 
@@ -500,6 +604,15 @@ ${v.text}
 
 </label>
 
+<br>
+
+<small>
+
+⏱
+${formatMinutes(v.duration)}
+
+</small>
+
 </div>
 
 <div>
@@ -551,6 +664,8 @@ hasil
 +
 
 "% selesai";
+
+updateStats();
 
 }
 
